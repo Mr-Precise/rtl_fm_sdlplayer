@@ -1912,4 +1912,3 @@ int main(int argc, char **argv)
 
   return librtlerr >= 0 ? librtlerr : -librtlerr;
 }
-
