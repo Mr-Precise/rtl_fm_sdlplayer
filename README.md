@@ -32,7 +32,7 @@ Installation
     4. In the drop down box choose Bulk-In, Interface (Interface 0). This may also sometimes show up as something prefixed with “RTL28328U”. That choice is also valid.
     5. Make sure that WinUSB is selected as the target driver and click on Replace Driver.
 
-- Download a compiled **RTL FM Player** here: [ >> Releases << ](https://github.com/rafaelferrari0/rtl_fm_player/releases)
+- Download a compiled **RTL FM Player** here: [ >> Releases << ](https://github.com/Mr-Precise/rtl_fm_sdlplayer/releases)
 - Optional. Compile it on Linux, or Windows using MinGW.
 
 
@@ -42,6 +42,8 @@ Usage
 On Linux, open a console and type `./rtl_fm_player`
 
 On Windows, just double click `rtl_fm_player.exe`
+
+Warning, may be loud!
 
 Use keyboard to control frequency, timeshift, mute and recording.
 
@@ -95,7 +97,7 @@ Building
     - `make`
 
 
-## Obsolete (soon)
+## Obsolete (soon new README)
 
 ### Compiling RTL FM Player sources using MinGW32 on Windows: (target 32 bit)
 `MinGW32 manual installation. You can install to any directory name without spaces in root drive, (eg: C:\MinGW32-RTL, D:\MinGWTemp). In this example we install to C:\MinGW32`
