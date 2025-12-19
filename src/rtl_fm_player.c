@@ -1345,6 +1345,7 @@ int main(int argc, char **argv)
   int charposition;
   int controldisabled;
   float newfrequency;
+  float newgain;
   struct tm *timeinfo;
   time_t rawtime;
   char infostr[255];
@@ -1668,6 +1669,7 @@ int main(int argc, char **argv)
 
   if (!controldisabled) {
     printf("| [W]: +50KHz [S]: -50KHz  [T]: Type a frequency                             |\n");
+    printf("| [G]: Tuner Gain (0 - 49)                                                   |\n");
     printf("| [A]: TimeShift [Past]  [D]: TimeShift [Present]  [L]: TimeShift [Live]     |\n");
     printf("| [M]: Mute/Unmute                                                           |\n");
     printf("| [R]: Record/Stop                                                           |\n");
@@ -1783,6 +1785,53 @@ int main(int argc, char **argv)
           }
         
       } /* if keybrd */
+
+      /* GAIN if keybrd */
+      if ((keybrd==71) || (keybrd==103)) { /* T */
+        printf("                                                  \r"); /* clear this line */
+        printf("Type the new tuner gain: ");
+        newgain=0;      
+
+        charposition=0;
+        do {
+          keybrd=_getch();
+          if ( ((keybrd >= '0') && (keybrd <= '9')) || (keybrd == 46) || (keybrd == 44)  ) {
+            infostr[charposition++] = keybrd;
+            printf("%c", keybrd);
+          } else if ( (keybrd==27) || (keybrd==13) || (keybrd==10) ) {
+            keybrd=255;
+          }        
+        } while ( (keybrd!=255) && (charposition<4) );
+        infostr[charposition]=0;
+
+        printf("\r");
+        newgain = atof(infostr);
+
+        /* Clamp 0 - 49.6 dB */
+        if (newgain < 0.0)
+           newgain = 0.0;
+        if (newgain > 49.6)
+           newgain = 49.6;
+
+        /* Convert to tenths of dB */
+        dongle.gain = (int)(newgain * 10 + 0.5);
+
+        /* Apply gain */
+        if (newgain >= 0) {
+          rtlsdr_set_tuner_gain_mode(dongle.dev, 1);
+          rtlsdr_set_tuner_gain(dongle.dev, dongle.gain);
+        }
+        else {
+          rtlsdr_set_tuner_gain_mode(dongle.dev, 0);
+        }
+
+        _circbuffeshift=0;
+        reprintline=1;
+
+        if (SDL_GetQueuedAudioSize(_audio_device) > CIRCBUFFCLUSTER * 5)
+          SDL_ClearQueuedAudio(_audio_device);
+
+      } /* GAIN keybrd */
 
       if ((keybrd==97) || (keybrd==65)) { /* A */
         _circbuffeshift+=20;
